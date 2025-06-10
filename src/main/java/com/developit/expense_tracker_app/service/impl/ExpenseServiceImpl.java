@@ -4,6 +4,7 @@ package com.developit.expense_tracker_app.service.impl;
 import com.developit.expense_tracker_app.dto.ExpenseDto;
 import com.developit.expense_tracker_app.entity.Category;
 import com.developit.expense_tracker_app.entity.Expense;
+import com.developit.expense_tracker_app.exceptions.ResourceNotFoundException;
 import com.developit.expense_tracker_app.mapper.ExpenseMapper;
 import com.developit.expense_tracker_app.repository.CategoryRepository;
 import com.developit.expense_tracker_app.repository.ExpenseRepository;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.antlr.v4.runtime.tree.xpath.XPath.findAll;
 
 @AllArgsConstructor
 @Service
@@ -43,7 +42,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         // Get expense entity from the database using expense id
         Expense expense = expenseRepository.findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("Expense not found with id: " + expenseId));
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found with id: " + expenseId));
 
         // Convert expense entity to expenseDto
         return ExpenseMapper.mapToExpenseDto(expense);
@@ -63,7 +62,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         // First need to check given expenseId is present in the database or not,
         Expense expense = expenseRepository
                 .findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("Expense not found with id: " + expenseId));
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found with id: " + expenseId));
 
         expense.setAmount(expenseDto.amount());
         expense.setExpenseDate(expenseDto.expenseDate());
@@ -73,7 +72,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
             // get the category entity by id
             Category category = categoryRepository.findById(expenseDto.categoryDto().id())
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + expenseDto.categoryDto().id()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + expenseDto.categoryDto().id()));
 
             expense.setCategory(category);
         }
@@ -91,7 +90,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         // First need to check given expenseId is present in the database or not,
         Expense expense = expenseRepository
                 .findById(expenseId)
-                .orElseThrow(() -> new RuntimeException("Expense not found with id: " + expenseId));
+                .orElseThrow(() -> new ResourceNotFoundException("Expense not found with id: " + expenseId));
 
         // Delete the entry from the database
         expenseRepository.delete(expense);

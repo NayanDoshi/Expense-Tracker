@@ -2,6 +2,7 @@ package com.developit.expense_tracker_app.service.impl;
 
 import com.developit.expense_tracker_app.dto.CategoryDto;
 import com.developit.expense_tracker_app.entity.Category;
+import com.developit.expense_tracker_app.exceptions.ResourceNotFoundException;
 import com.developit.expense_tracker_app.mapper.CategoryMapper;
 import com.developit.expense_tracker_app.repository.CategoryRepository;
 import com.developit.expense_tracker_app.service.CategoryService;
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category category = categoryRepository
                 .findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
 
         // convert category to CategoryDto
         return CategoryMapper.mapToCategoryDto(category);
@@ -57,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService {
         // get category entity from the database by category id
         Category category = categoryRepository
                 .findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
 
         // update the category entity object and save to database table
         category.setName(categoryDto.name());
@@ -71,7 +72,7 @@ public class CategoryServiceImpl implements CategoryService {
         // get category entity from the database by category id
         Category category = categoryRepository
                 .findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
 
         // Delete the category entity object
         categoryRepository.delete(category);
